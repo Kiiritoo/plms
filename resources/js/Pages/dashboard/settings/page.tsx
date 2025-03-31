@@ -407,7 +407,7 @@ export default function SettingsPage() {
                       <Label htmlFor="language">Preferred Language</Label>
                       <Select
                         value={profileForm.language}
-                        onValueChange={(value) => setProfileForm((prev) => ({ ...prev, language: value }))}
+                        onValueChange={(value: string) => setProfileForm((prev) => ({ ...prev, language: value }))}
                       >
                         <SelectTrigger id="language">
                           <SelectValue placeholder="Select language" />
@@ -675,8 +675,8 @@ export default function SettingsPage() {
                           <div className="text-center text-white">
                             <p className="font-medium">Dark</p>
                             <p className="text-sm text-gray-400">
-  Dark mode for nighttime use
-</p>
+                              Dark mode for nighttime use
+                            </p>
                           </div>
                         </Label>
                       </div>
@@ -771,7 +771,7 @@ export default function SettingsPage() {
                     <h3 className="text-lg font-medium">Profile Visibility</h3>
                     <RadioGroup
                       value={privacySettings.profileVisibility}
-                      onValueChange={(value) => handlePrivacyChange("profileVisibility", value)}
+                      onValueChange={(value: string) => handlePrivacyChange("profileVisibility", value)}
                       className="space-y-3"
                     >
                       <div className="flex items-start space-x-2">
