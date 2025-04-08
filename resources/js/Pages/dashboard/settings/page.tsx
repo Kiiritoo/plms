@@ -148,7 +148,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-blue-50/30 dark:bg-blue-950/90">
+    <div className="flex w-full h-screen overflow-hidden bg-blue-50/30 dark:bg-blue-950/90">
       {/* Sidebar - Mobile version */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-blue-100 bg-white transition-transform duration-300 ease-in-out dark:border-blue-800/30 dark:bg-blue-900/90 lg:static lg:translate-x-0 ${
@@ -156,74 +156,74 @@ export default function SettingsPage() {
         }`}
       >
         {/* Sidebar Header */}
-        <div className="flex h-14 items-center border-b border-blue-100 px-4 dark:border-blue-800/30">
+        <div className="flex items-center px-4 border-b border-blue-100 h-14 dark:border-blue-800/30">
           <div className="flex items-center gap-2 font-semibold">
-            <div className="relative h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-400">
-              <Sparkles className="absolute inset-0 m-auto h-5 w-5 text-white" />
+            <div className="relative w-8 h-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-400">
+              <Sparkles className="absolute inset-0 w-5 h-5 m-auto text-white" />
             </div>
             <span>LMS Tels</span>
           </div>
           <Button variant="ghost" size="icon" className="ml-auto lg:hidden" onClick={() => setIsSidebarOpen(false)}>
-            <X className="h-5 w-5" />
+            <X className="w-5 h-5" />
             <span className="sr-only">Close sidebar</span>
           </Button>
         </div>
 
         {/* Sidebar Content */}
-        <div className="flex-1 overflow-auto py-4">
+        <div className="flex-1 py-4 overflow-auto">
           <nav className="grid gap-1 px-2">
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
             >
-              <LayoutDashboard className="h-5 w-5" />
+              <LayoutDashboard className="w-5 h-5" />
               <span>Dashboard</span>
             </Link>
             <Link
               href="/dashboard/courses"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
             >
-              <Book className="h-5 w-5" />
+              <Book className="w-5 h-5" />
               <span>My Courses</span>
             </Link>
             <Link
               href="/dashboard/assignments"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
             >
-              <FileText className="h-5 w-5" />
+              <FileText className="w-5 h-5" />
               <span>Assignments</span>
             </Link>
             <Link
               href="/dashboard/grades"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
             >
-              <GraduationCap className="h-5 w-5" />
+              <GraduationCap className="w-5 h-5" />
               <span>Grades</span>
             </Link>
             <Link
               href="/dashboard/calendar"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
             >
-              <Calendar className="h-5 w-5" />
+              <Calendar className="w-5 h-5" />
               <span>Calendar</span>
             </Link>
           </nav>
 
-          <div className="mt-6 px-3">
-            <p className="px-2 text-xs font-semibold uppercase text-gray-400 dark:text-blue-300/70">Resources</p>
-            <nav className="mt-2 grid gap-1">
+          <div className="px-3 mt-6">
+            <p className="px-2 text-xs font-semibold text-gray-400 uppercase dark:text-blue-300/70">Resources</p>
+            <nav className="grid gap-1 mt-2">
               <Link
                 href="/dashboard/library"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+                className="flex items-center gap-3 px-3 py-2 text-gray-500 transition-all rounded-lg hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
               >
-                <Download className="h-5 w-5" />
+                <Download className="w-5 h-5" />
                 <span>Library</span>
               </Link>
               <Link
                 href="/dashboard/settings"
-                className="flex items-center gap-3 rounded-lg bg-blue-100/70 px-3 py-2 text-blue-900 transition-all hover:text-blue-600 dark:bg-blue-800/30 dark:text-blue-50 dark:hover:text-blue-400"
+                className="flex items-center gap-3 px-3 py-2 text-blue-900 transition-all rounded-lg bg-blue-100/70 hover:text-blue-600 dark:bg-blue-800/30 dark:text-blue-50 dark:hover:text-blue-400"
               >
-                <SettingsIcon className="h-5 w-5" />
+                <SettingsIcon className="w-5 h-5" />
                 <span>Settings</span>
               </Link>
             </nav>
@@ -231,7 +231,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="border-t border-blue-100 p-4 dark:border-blue-800/30">
+        <div className="p-4 border-t border-blue-100 dark:border-blue-800/30">
           <div className="flex items-center gap-3">
             <Avatar>
               <AvatarImage src="/placeholder-user.jpg" alt="Student" />
@@ -239,28 +239,28 @@ export default function SettingsPage() {
             </Avatar>
             <div className="flex-1 truncate">
               <p className="text-sm font-medium">Jane Doe</p>
-              <p className="truncate text-xs text-gray-500 dark:text-blue-300/70">Grade 10 - Student</p>
+              <p className="text-xs text-gray-500 truncate dark:text-blue-300/70">Grade 10 - Student</p>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
+                  <User className="w-4 h-4 mr-2" />
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <SettingsIcon className="mr-2 h-4 w-4" />
+                  <SettingsIcon className="w-4 h-4 mr-2" />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="w-4 h-4 mr-2" />
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -272,14 +272,14 @@ export default function SettingsPage() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         {/* Header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center border-b border-blue-100 bg-white px-4 dark:border-blue-800/30 dark:bg-blue-900/90 lg:px-6">
+        <header className="sticky top-0 z-30 flex items-center px-4 bg-white border-b border-blue-100 h-14 dark:border-blue-800/30 dark:bg-blue-900/90 lg:px-6">
           <Button variant="ghost" size="icon" className="mr-2 lg:hidden" onClick={() => setIsSidebarOpen(true)}>
-            <Menu className="h-5 w-5" />
+            <Menu className="w-5 h-5" />
             <span className="sr-only">Toggle sidebar</span>
           </Button>
 
-          <div className="flex w-full items-center gap-2 md:ml-auto md:gap-4 lg:ml-0">
-            <form className="ml-auto flex-1 md:flex-initial">
+          <div className="flex items-center w-full gap-2 md:ml-auto md:gap-4 lg:ml-0">
+            <form className="flex-1 ml-auto md:flex-initial">
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-blue-300/70" />
                 <Input
@@ -290,23 +290,23 @@ export default function SettingsPage() {
               </div>
             </form>
             <Button variant="outline" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
+              <Bell className="w-5 h-5" />
               <span className="sr-only">Notifications</span>
-              <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-blue-600"></span>
+              <span className="absolute flex w-2 h-2 bg-blue-600 rounded-full right-1 top-1"></span>
             </Button>
           </div>
         </header>
 
         {/* Settings Content */}
-        <div className="container mx-auto p-4 lg:p-6">
+        <div className="container p-4 mx-auto lg:p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
             <p className="text-gray-500 dark:text-blue-300/70">Manage your account preferences and settings</p>
           </div>
 
           {saveStatus && (
-            <Alert className="mb-6 bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-              <Check className="h-4 w-4" />
+            <Alert className="mb-6 text-green-800 bg-green-50 dark:bg-green-900/30 dark:text-green-300">
+              <Check className="w-4 h-4" />
               <AlertTitle>Success</AlertTitle>
               <AlertDescription>{saveStatus}</AlertDescription>
             </Alert>
@@ -315,23 +315,23 @@ export default function SettingsPage() {
           <Tabs defaultValue="profile" className="space-y-6">
             <TabsList className="w-full sm:w-auto">
               <TabsTrigger value="profile" className="flex items-center gap-1">
-                <User className="h-4 w-4" />
+                <User className="w-4 h-4" />
                 <span>Profile</span>
               </TabsTrigger>
               <TabsTrigger value="notifications" className="flex items-center gap-1">
-                <Bell className="h-4 w-4" />
+                <Bell className="w-4 h-4" />
                 <span>Notifications</span>
               </TabsTrigger>
               <TabsTrigger value="appearance" className="flex items-center gap-1">
-                <Palette className="h-4 w-4" />
+                <Palette className="w-4 h-4" />
                 <span>Appearance</span>
               </TabsTrigger>
               <TabsTrigger value="privacy" className="flex items-center gap-1">
-                <Shield className="h-4 w-4" />
+                <Shield className="w-4 h-4" />
                 <span>Privacy</span>
               </TabsTrigger>
               <TabsTrigger value="accessibility" className="flex items-center gap-1">
-                <HelpCircle className="h-4 w-4" />
+                <HelpCircle className="w-4 h-4" />
                 <span>Accessibility</span>
               </TabsTrigger>
             </TabsList>
@@ -422,9 +422,9 @@ export default function SettingsPage() {
                       </Select>
                     </div>
                   </CardContent>
-                  <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                  <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                     <Button className="ml-auto bg-blue-600 hover:bg-blue-700" onClick={handleSaveSettings}>
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save className="w-4 h-4 mr-2" />
                       Save Changes
                     </Button>
                   </CardFooter>
@@ -436,17 +436,17 @@ export default function SettingsPage() {
                     <CardDescription>Update your profile photo</CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-col items-center justify-center space-y-4">
-                    <Avatar className="h-32 w-32">
+                    <Avatar className="w-32 h-32">
                       <AvatarImage src="/placeholder-user.jpg" alt="Profile" />
                       <AvatarFallback className="text-2xl">JD</AvatarFallback>
                     </Avatar>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm">
-                        <Camera className="mr-2 h-4 w-4" />
+                        <Camera className="w-4 h-4 mr-2" />
                         Upload Photo
                       </Button>
                       <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="w-4 h-4 mr-2" />
                         Remove
                       </Button>
                     </div>
@@ -479,9 +479,9 @@ export default function SettingsPage() {
                       <p>September 1, 2023</p>
                     </div>
                   </CardContent>
-                  <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                  <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                     <Button variant="outline" className="w-full">
-                      <Lock className="mr-2 h-4 w-4" />
+                      <Lock className="w-4 h-4 mr-2" />
                       Change Password
                     </Button>
                   </CardFooter>
@@ -624,13 +624,13 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                   <Button variant="outline" className="mr-auto">
-                    <BellOff className="mr-2 h-4 w-4" />
+                    <BellOff className="w-4 h-4 mr-2" />
                     Pause All Notifications
                   </Button>
                   <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSaveSettings}>
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
                 </CardFooter>
@@ -653,12 +653,12 @@ export default function SettingsPage() {
                       className="grid grid-cols-1 gap-4 sm:grid-cols-3"
                     >
                       <div>
-                        <RadioGroupItem value="light" id="theme-light" className="peer sr-only" />
+                        <RadioGroupItem value="light" id="theme-light" className="sr-only peer" />
                         <Label
                           htmlFor="theme-light"
                           className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-4 hover:bg-gray-50 hover:border-gray-300 peer-data-[state=checked]:border-blue-600 [&:has([data-state=checked])]:border-blue-600"
                         >
-                          <Sun className="mb-3 h-6 w-6" />
+                          <Sun className="w-6 h-6 mb-3" />
                           <div className="text-center">
                             <p className="font-medium">Light</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Light mode for daytime use</p>
@@ -666,12 +666,12 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div>
-                        <RadioGroupItem value="dark" id="theme-dark" className="peer sr-only" />
+                        <RadioGroupItem value="dark" id="theme-dark" className="sr-only peer" />
                         <Label
                           htmlFor="theme-dark"
                           className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-gray-950 p-4 hover:bg-gray-900 hover:border-gray-700 peer-data-[state=checked]:border-blue-600 [&:has([data-state=checked])]:border-blue-600"
                         >
-                          <Moon className="mb-3 h-6 w-6 text-white" />
+                          <Moon className="w-6 h-6 mb-3 text-white" />
                           <div className="text-center text-white">
                             <p className="font-medium">Dark</p>
                             <p className="text-sm text-gray-400">
@@ -681,12 +681,12 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div>
-                        <RadioGroupItem value="system" id="theme-system" className="peer sr-only" />
+                        <RadioGroupItem value="system" id="theme-system" className="sr-only peer" />
                         <Label
                           htmlFor="theme-system"
                           className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-4 hover:bg-gray-50 hover:border-gray-300 peer-data-[state=checked]:border-blue-600 [&:has([data-state=checked])]:border-blue-600"
                         >
-                          <Monitor className="mb-3 h-6 w-6" />
+                          <Monitor className="w-6 h-6 mb-3" />
                           <div className="text-center">
                             <p className="font-medium">System</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">Follow system theme</p>
@@ -700,7 +700,7 @@ export default function SettingsPage() {
                     <h3 className="text-lg font-medium">Color Scheme</h3>
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="h-10 w-10 rounded-full bg-blue-600"></div>
+                        <div className="w-10 h-10 bg-blue-600 rounded-full"></div>
                         <Label className="cursor-pointer">
                           <RadioGroupItem
                             value="blue"
@@ -713,21 +713,21 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="h-10 w-10 rounded-full bg-purple-600"></div>
+                        <div className="w-10 h-10 bg-purple-600 rounded-full"></div>
                         <Label className="cursor-pointer">
                           <RadioGroupItem value="purple" id="color-purple" name="color-scheme" className="sr-only" />
                           <span>Purple</span>
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="h-10 w-10 rounded-full bg-green-600"></div>
+                        <div className="w-10 h-10 bg-green-600 rounded-full"></div>
                         <Label className="cursor-pointer">
                           <RadioGroupItem value="green" id="color-green" name="color-scheme" className="sr-only" />
                           <span>Green</span>
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="h-10 w-10 rounded-full bg-amber-600"></div>
+                        <div className="w-10 h-10 rounded-full bg-amber-600"></div>
                         <Label className="cursor-pointer">
                           <RadioGroupItem value="amber" id="color-amber" name="color-scheme" className="sr-only" />
                           <span>Amber</span>
@@ -751,10 +751,11 @@ export default function SettingsPage() {
                     </Select>
                   </div>
                 </CardContent>
-                <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                   <Button className="ml-auto bg-blue-600 hover:bg-blue-700" onClick={handleSaveSettings}>
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="w-4 h-4 mr-2" />
                     Save Changes
+                   </Button>
                   </CardFooter>
               </Card>
             </TabsContent>
@@ -866,8 +867,8 @@ export default function SettingsPage() {
                     </RadioGroup>
                   </div>
 
-                  <Alert className="bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                    <Info className="h-4 w-4" />
+                  <Alert className="text-blue-800 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300">
+                    <Info className="w-4 h-4" />
                     <AlertTitle>Privacy Notice</AlertTitle>
                     <AlertDescription>
                       Your data is always protected and never shared with third parties outside of your school. For more
@@ -879,13 +880,13 @@ export default function SettingsPage() {
                     </AlertDescription>
                   </Alert>
                 </CardContent>
-                <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                   <Button variant="outline" className="mr-auto text-red-600 hover:text-red-700 hover:bg-red-50">
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <Trash2 className="w-4 h-4 mr-2" />
                     Delete My Data
                   </Button>
                   <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSaveSettings}>
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
                 </CardFooter>
@@ -908,7 +909,7 @@ export default function SettingsPage() {
                       className="grid grid-cols-1 gap-4 sm:grid-cols-4"
                     >
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-xs font-medium dark:bg-gray-800">
+                        <div className="flex items-center justify-center w-10 h-10 text-xs font-medium bg-gray-100 rounded-full dark:bg-gray-800">
                           A
                         </div>
                         <Label className="cursor-pointer">
@@ -917,7 +918,7 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-sm font-medium dark:bg-gray-800">
+                        <div className="flex items-center justify-center w-10 h-10 text-sm font-medium bg-gray-100 rounded-full dark:bg-gray-800">
                           A
                         </div>
                         <Label className="cursor-pointer">
@@ -926,7 +927,7 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-base font-medium dark:bg-gray-800">
+                        <div className="flex items-center justify-center w-10 h-10 text-base font-medium bg-gray-100 rounded-full dark:bg-gray-800">
                           A
                         </div>
                         <Label className="cursor-pointer">
@@ -935,7 +936,7 @@ export default function SettingsPage() {
                         </Label>
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-lg font-medium dark:bg-gray-800">
+                        <div className="flex items-center justify-center w-10 h-10 text-lg font-medium bg-gray-100 rounded-full dark:bg-gray-800">
                           A
                         </div>
                         <Label className="cursor-pointer">
@@ -991,17 +992,17 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <Alert className="bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                    <HelpCircle className="h-4 w-4" />
+                  <Alert className="text-blue-800 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-300">
+                    <HelpCircle className="w-4 h-4" />
                     <AlertTitle>Accessibility Support</AlertTitle>
                     <AlertDescription>
                       If you need additional accessibility accommodations, please contact your school's IT support team.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
-                <CardFooter className="border-t bg-gray-50 px-6 py-3 dark:border-gray-800 dark:bg-gray-900/50">
+                <CardFooter className="px-6 py-3 border-t bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                   <Button className="ml-auto bg-blue-600 hover:bg-blue-700" onClick={handleSaveSettings}>
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
                 </CardFooter>
