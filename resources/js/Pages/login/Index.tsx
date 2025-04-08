@@ -1,16 +1,14 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
-import { Checkbox } from "@/Components/ui/checkbox"
 import { Sparkles, ArrowRight, AlertCircle, Info, HelpCircle, GraduationCap, Users } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Link, router } from "@inertiajs/react"
-
+import { Link } from "@inertiajs/react"
+import axios from "axios"
+import Swal from "sweetalert2"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -24,23 +22,73 @@ export default function LoginPage() {
     setMounted(true)
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
 
-    // Validate email format
-    if (!email.includes("@")) {
-      setError("Please enter a valid school email address")
-      setIsLoading(false)
-      return
-    }
+    try {
+      // Connect to the Laravel route
+      const response = await axios.post("/login", {
+        email,
+        password,
+      })
 
-    // Simulate authentication
-    setTimeout(() => {
+      // Show success message
+      Swal.fire({
+        title: "Login Berhasil",
+        text: "Selamat datang kembali!",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      })
+
+      // Redirect to dashboard or handle the successful login
+      window.location.href = "/dashboard"
+    } catch (err) {
       setIsLoading(false)
-      router.visit('/dashboard')
-    }, 1500)
+
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        // Handle validation errors
+        if (err.response.status === 422 && err.response.data.errors) {
+          // Laravel validation errors
+          const validationErrors = Object.values(err.response.data.errors).flat().join("<br>")
+          Swal.fire({
+            title: "Validation Error",
+            html: validationErrors,
+            icon: "error",
+            confirmButtonColor: "#3b82f6",
+          })
+        } else if (err.response.status === 401) {
+          // Authentication error
+          setError(err.response.data.error || "Email atau password salah")
+          Swal.fire({
+            title: "Login Gagal",
+            text: err.response.data.error || "Email atau password salah",
+            icon: "error",
+            confirmButtonColor: "#3b82f6",
+          })
+        } else {
+          // Other errors
+          setError("Terjadi kesalahan. Silakan coba lagi.")
+          Swal.fire({
+            title: "Error",
+            text: "Terjadi kesalahan. Silakan coba lagi.",
+            icon: "error",
+            confirmButtonColor: "#3b82f6",
+          })
+        }
+      } else {
+        // Network or other errors
+        setError("Terjadi kesalahan jaringan. Silakan coba lagi.")
+        Swal.fire({
+          title: "Network Error",
+          text: "Terjadi kesalahan jaringan. Silakan coba lagi.",
+          icon: "error",
+          confirmButtonColor: "#3b82f6",
+        })
+      }
+    }
   }
 
   if (!mounted) {
@@ -189,18 +237,6 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <div className="flex items-center space-x-2 py-1">
-                  <Checkbox
-                    id="remember"
-                    className="h-5 w-5 rounded-md border-muted-foreground/30 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
-                  />
-                  <label
-                    htmlFor="remember"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Remember me for 30 days
-                  </label>
-                </div>
               </div>
 
               <Button
@@ -238,45 +274,6 @@ export default function LoginPage() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </div>
                 )}
-              </Button>
-
-              {/* Divider */}
-              <div className="relative my-2">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-muted-foreground/20"></span>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-muted-foreground dark:bg-background">Or continue with</span>
-                </div>
-              </div>
-
-              {/* Google login */}
-              <Button
-                type="button"
-                variant="outline"
-                className="h-12 w-full flex items-center justify-center gap-2 text-base font-medium border-muted-foreground/30 transition-all duration-200 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/20"
-              >
-                <svg viewBox="0 0 24 24" width="24" height="24" className="h-5 w-5">
-                  <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
-                    <path
-                      fill="#4285F4"
-                      d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 45.859 C -20.534 43.009 -17.884 40.899 -14.754 40.899 Z"
-                    />
-                  </g>
-                </svg>
-                <span>Sign in with Google</span>
               </Button>
             </form>
           </div>

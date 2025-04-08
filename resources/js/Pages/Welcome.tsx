@@ -66,7 +66,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button className="bg-blue-600 hover:bg-blue-700">
-                    <Link href="/login">
+                    <Link href="/login" className="flex flex-row items-center">
                       Login to Platform
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -276,7 +276,7 @@ export default function LandingPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button className="bg-white text-blue-600 hover:bg-blue-50">
-                  <Link href="/login">
+                  <Link href="/login" className="flex flex-row items-center">
                     Login to Platform
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

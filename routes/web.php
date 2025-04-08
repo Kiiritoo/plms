@@ -8,6 +8,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,7 +29,22 @@ Route::middleware('guest')->group(function () {
     Route::get('login', function () {
         return Inertia::render('login/Index');
     })->name('login');
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::post('login', function(Request $request) {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+    
+        if (Auth::attempt($credentials)) {
+            // Regenerasi session untuk keamanan
+            $request->session()->regenerate();
+    
+            return response()->json(['message' => 'Login berhasil', 'user' => Auth::user()]);
+        }
+    
+        return response()->json(['error' => 'Email atau password salah'], 401);
+    });
 
     // Register Routes
     Route::get('register', function () {
