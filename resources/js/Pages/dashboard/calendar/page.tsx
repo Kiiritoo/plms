@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import { Link } from "@inertiajs/react"
 import {
   Bell,
   Book,
@@ -30,6 +30,16 @@ import {
   Bookmark,
   CheckCircle2,
   AlertCircle,
+  LucideBarChart,
+  TrendingUp,
+  ArrowUpRight,
+  ArrowDownRight,
+  HelpCircle,
+  Award,
+  MoreHorizontal,
+  Star,
+  StarHalf,
+  Users,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"

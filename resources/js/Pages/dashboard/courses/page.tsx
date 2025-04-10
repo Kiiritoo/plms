@@ -21,9 +21,9 @@ import {
   Play,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/Components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
+import { Input } from "@/Components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +31,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Card, CardContent } from "@/components/ui/card"
+} from "@/Components/ui/dropdown-menu"
+import { Card, CardContent, CardFooter } from "@/Components/ui/card"
 
 // New course data structure based on the image
 const courses = [
@@ -445,77 +445,24 @@ const CoursesPage = () => {
           {/* Course Grid */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredCourses.map((course) => (
-              <Link href={`/dashboard/courses/${course.id}`} key={course.id} className="group">
-                <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
-                  <div className="relative">
-                    {/* Course Header with Background */}
-                    <div className={`relative h-48 bg-gradient-to-r ${course.bgColor} overflow-hidden`}>
-                      {/* Free Label */}
-                      {course.isFree && (
-                        <div className="absolute left-0 top-0 z-10 bg-yellow-500 px-3 py-1 text-xs font-bold text-white">
-                          FREE
-                        </div>
-                      )}
-
-                      {/* Course Title */}
-                      <div className="absolute bottom-0 left-0 p-4 text-white">
-                        <h3 className="text-xl font-bold">{course.title}</h3>
-                        {course.subtitle && <p className="text-lg">{course.subtitle}</p>}
-                        <p className="mt-2 text-xs uppercase">{course.portal}</p>
-                      </div>
-
-                      {/* Curved Design Element */}
-                      <div className="absolute bottom-0 right-0 h-full w-1/3 bg-white">
-                        <div className="absolute bottom-0 right-0 h-full w-full rounded-tl-[100px] bg-gradient-to-r from-blue-900 to-blue-800"></div>
-                      </div>
-
-                      {/* Instructor Avatar */}
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 transform">
-                        <Avatar className="h-20 w-20 border-4 border-white">
-                          <AvatarImage src={course.instructor.avatar} alt={course.instructor.name} />
-                          <AvatarFallback className="text-lg">
-                            {course.instructor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                      </div>
-
-                      {/* Gear Icon */}
-                      <div className="absolute bottom-4 right-4">
-                        <div className="h-8 w-8 rounded-full bg-white/20 p-1.5">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="h-5 w-5">
-                            <path d="M17.5,12c0,0.4-0.1,0.8-0.2,1.2l1.8,1.4c0.2,0.1,0.2,0.4,0.1,0.6l-1.7,2.9c-0.1,0.2-0.3,0.3-0.5,0.2l-2.1-0.8 c-0.4,0.3-0.9,0.6-1.4,0.8l-0.3,2.2c0,0.2-0.2,0.4-0.5,0.4H9.1c-0.2,0-0.4-0.2-0.5,0.4L8.3,18c-0.5-0.2-1-0.4-1.4-0.8l-2.1,0.8 c-0.2,0.1-0.4,0-0.5-0.2l-1.7-2.9c-0.1-0.2-0.1-0.4,0.1-0.6l1.8-1.4C4.1,12.8,4,12.4,4,12s0.1-0.8,0.2-1.2L2.4,9.4 C2.2,9.3,2.1,9,2.3,8.8l1.7-2.9c0.1-0.2,0.3-0.3,0.5-0.2l2.1,0.8c0.4-0.3,0.9-0.6,1.4-0.8l0.3-2.2C8.3,3.2,8.5,3,8.7,3h3.4 c0.2,0,0.4,0.2,0.5,0.4l0.3,2.2c0.5,0.2,1,0.4,1.4,0.8l2.1-0.8c0.2-0.1,0.4,0,0.5,0.2l1.7,2.9c0.1,0.2,0.1,0.4-0.1,0.6l-1.8,1.4 C17.4,11.2,17.5,11.6,17.5,12z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z" />
-                          </svg>
-                        </div>
-                      </div>
+              <Card key={course.id} className="overflow-hidden transition-all duration-300 hover:shadow-md">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold">{course.title}</h3>
+                      <p className="text-sm text-gray-500">{course.lessons} Lessons</p>
                     </div>
-
-                    {/* Course Footer */}
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{course.lessons} Lessons</p>
-                        <div className="flex space-x-2">
-                          <div className="rounded-full bg-yellow-500 px-3 py-1 text-xs font-medium text-white">
-                            Upgrade Your Skills
-                          </div>
-                          <Link href={`/dashboard/courses/${course.id}/learn`}>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="h-8 w-8 rounded-full p-0 bg-blue-600 hover:bg-blue-700"
-                            >
-                              <Play className="h-4 w-4 text-white" />
-                              <span className="sr-only">Start Learning</span>
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </CardContent>
+                    <Button size="sm" variant="ghost" className="h-8 w-8 rounded-full p-0">
+                      <Play className="h-4 w-4" />
+                    </Button>
                   </div>
-                </Card>
-              </Link>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild className="w-full">
+                    <Link href={`/dashboard/courses/${course.id}`}>View Course</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
             ))}
           </div>
 

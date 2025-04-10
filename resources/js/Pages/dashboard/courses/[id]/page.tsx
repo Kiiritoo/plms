@@ -1,50 +1,67 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { Link, router } from "@inertiajs/react"
 import {
-  ArrowLeft,
-  BookOpen,
+  Bell,
+  Book,
   Calendar,
-  CheckCircle,
-  Clock,
+  ChevronDown,
   Download,
   FileText,
-  Info,
-  Layers,
-  MessageSquare,
-  MoreHorizontal,
-  Play,
-  Share2,
-  Users,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+  Sparkles,
+  User,
+  X,
+  LucideBarChart,
+  TrendingUp,
+  ArrowUpRight,
+  ArrowDownRight,
+  HelpCircle,
   Award,
-  ExternalLink,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
+  Filter,
+  MoreHorizontal,
   Star,
-  Server,
-  Network,
-  Terminal,
-  Shield,
-  Lock,
+  StarHalf,
+  Users,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Progress } from "@/components/ui/progress"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+interface Course {
+  id: string
+  title: string
+  description: string
+  progress: number
+  upcomingAssignments: Array<{
+    id: string
+    title: string
+    dueDate: string
+    status: string
+  }>
+}
 
 // Comprehensive course data with detailed information
 const courseData = [
@@ -534,756 +551,411 @@ const courseVideos = {
 }
 
 export default function CourseDetailPage() {
-  // Add a loading state at the top of the component
-  const [isLoading, setIsLoading] = useState(true)
-  const params = useParams()
-  const router = useRouter()
-  const courseId = Number(params.id)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [selectedTab, setSelectedTab] = useState("overview")
+  const [course, setCourse] = useState<Course | null>(null)
 
-  // Find the course by ID
-  const course = courseData.find((c) => c.id === courseId)
-
-  // Update the useState section to include more state variables for functionality
-  const [activeTab, setActiveTab] = useState<string>("overview")
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
-  const [isEnrolled, setIsEnrolled] = useState<boolean>(false)
-  const [courseProgress, setCourseProgress] = useState<number>(0)
-  const [lastAccessedLesson, setLastAccessedLesson] = useState<{ moduleId: number; lessonId: number } | null>(null)
-  const [notes, setNotes] = useState<string>("")
-  const [noteInput, setNoteInput] = useState<string>("")
-
-  // Modify the useEffect to include loading state
   useEffect(() => {
-    // Set loading to true initially
-    setIsLoading(true)
-
-    // Use a small timeout to ensure the component is mounted before checking course
-    const timer = setTimeout(() => {
-      if (!course) {
-        router.push("/dashboard/courses")
-        return
-      }
-
-      // Check if already enrolled and set initial state
-      setIsEnrolled(course.enrolled || false)
-
-      // Simulate retrieving last accessed lesson from storage
+    // Fetch course details
+    const fetchCourse = async () => {
       try {
-        if (typeof window !== "undefined") {
-          // Check if we're in the browser
-          const storedData = localStorage.getItem(`course-${courseId}`)
-          if (storedData) {
-            const data = JSON.parse(storedData)
-            setLastAccessedLesson(data.lastAccessedLesson || null)
-            setNotes(data.notes || "")
-            setIsEnrolled(true)
-
-            // Calculate progress based on completed lessons
-            const totalLessons = course.syllabus.reduce((total, module) => total + module.lessons.length, 0)
-            const completedLessons = course.syllabus.reduce((total, module) => {
-              return (
-                total +
-                module.lessons.filter(
-                  (lesson) =>
-                    localStorage.getItem(`course-${courseId}-lesson-${module.id}-${lesson.id}-completed`) === "true",
-                ).length
-              )
-            }, 0)
-
-            const calculatedProgress = Math.round((completedLessons / totalLessons) * 100)
-            setCourseProgress(calculatedProgress || data.progress || course.progress || 0)
-          }
-        }
-      } catch (e) {
-        console.error("Error parsing stored course data", e)
+        const response = await fetch(`/api/courses/${router.params.id}`)
+        const data = await response.json()
+        setCourse(data)
+      } catch (error) {
+        console.error("Error fetching course:", error)
       }
-
-      // Set loading to false after data is processed
-      setIsLoading(false)
-    }, 0)
-
-    return () => clearTimeout(timer)
-  }, [course, router, courseId])
-
-  // Add these functions to handle course interactions
-  const handleEnroll = () => {
-    setIsEnrolled(true)
-    setCourseProgress(0)
-
-    // Save enrollment status to localStorage
-    const data = {
-      enrolled: true,
-      progress: 0,
-      lastAccessedLesson: null,
-      notes: "",
-    }
-    localStorage.setItem(`course-${courseId}`, JSON.stringify(data))
-  }
-
-  const handleSaveNotes = () => {
-    const updatedNotes = noteInput
-    setNotes(updatedNotes)
-
-    // Save to localStorage
-    const data = {
-      enrolled: true,
-      progress: courseProgress,
-      lastAccessedLesson,
-      notes: updatedNotes,
-    }
-    localStorage.setItem(`course-${courseId}`, JSON.stringify(data))
-  }
-
-  const toggleFaq = (index: number) => {
-    setExpandedFaq((prev) => (prev === index ? null : index))
-  }
-
-  // Function to get video URL for a lesson
-  const getVideoUrl = (moduleId: number, lessonId: number) => {
-    if (courseVideos[courseId] && courseVideos[courseId][lessonId]) {
-      return `https://www.youtube.com/embed/${courseVideos[courseId][lessonId]}`
-    }
-    return null
-  }
-
-  // Function to get icon based on course category
-  const getCourseIcon = () => {
-    switch (course?.category) {
-      case "System Admin":
-        return <Server className="h-8 w-8" />
-      case "Security":
-        return <Shield className="h-8 w-8" />
-      case "Cisco":
-        return <Network className="h-8 w-8" />
-      default:
-        return <BookOpen className="h-8 w-8" />
-    }
-  }
-
-  // Add this function to safely check if a lesson is completed
-  // This will prevent potential localStorage errors
-
-  const isLessonCompleted = (moduleId, lessonId) => {
-    try {
-      if (typeof window !== "undefined") {
-        return localStorage.getItem(`course-${courseId}-lesson-${moduleId}-${lessonId}-completed`) === "true"
-      }
-      return false
-    } catch (e) {
-      console.error("Error checking lesson completion status", e)
-      return false
-    }
-  }
-
-  // Add a function to check if a lesson is accessible (unlocked)
-  // This should be added near the other utility functions like getVideoUrl, getCourseIcon, etc.
-  const isLessonAccessible = (moduleId: number, lessonId: number) => {
-    if (!isEnrolled) return false
-
-    // First lesson is always accessible
-    if (moduleId === 1 && lessonId === course.syllabus[0].lessons[0].id) return true
-
-    // For other lessons, we need to check if all previous lessons are completed
-    const allLessons: { moduleId: number; lessonId: number }[] = []
-    course.syllabus.forEach((module) => {
-      module.lessons.forEach((lesson) => {
-        allLessons.push({ moduleId: module.id, lessonId: lesson.id })
-      })
-    })
-
-    // Find current lesson index
-    const currentIndex = allLessons.findIndex((l) => l.moduleId === moduleId && l.lessonId === lessonId)
-
-    if (currentIndex <= 0) return true // First lesson or invalid lesson
-
-    // Check if all previous lessons are completed
-    for (let i = 0; i < currentIndex; i++) {
-      const prevLesson = allLessons[i]
-      const isCompleted =
-        localStorage.getItem(`course-${courseId}-lesson-${prevLesson.moduleId}-${prevLesson.lessonId}-completed`) ===
-        "true"
-
-      if (!isCompleted) return false
     }
 
-    return true
-  }
+    fetchCourse()
+  }, [router.params.id])
 
-  // Modify the handleAccessLesson function to check if the lesson is accessible
-  const handleAccessLesson = (moduleId: number, lessonId: number) => {
-    if (!isEnrolled) return
-
-    // Check if the lesson is accessible
-    if (!isLessonAccessible(moduleId, lessonId)) {
-      // Show a message that previous lessons need to be completed first
-      alert("You need to complete previous lessons before accessing this one.")
-      return
-    }
-
-    setLastAccessedLesson({ moduleId, lessonId })
-
-    // Save last accessed lesson to localStorage
-    const data = {
-      enrolled: true,
-      progress: courseProgress,
-      lastAccessedLesson: { moduleId, lessonId },
-      notes: notes,
-    }
-    localStorage.setItem(`course-${courseId}`, JSON.stringify(data))
-
-    // Navigate to the learn page with the selected lesson
-    router.push(`/dashboard/courses/${courseId}/learn?module=${moduleId}&lesson=${lessonId}`)
-  }
-
-  // Replace the loading check with our new loading state
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-blue-950/90">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-      </div>
-    )
-  }
-
-  // Add a null check for course
   if (!course) {
-    return null // Return null while redirecting
+    return <div>Loading...</div>
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-blue-950/90">
-      {/* Course Header */}
-      <div className="sticky top-0 z-30 flex h-14 items-center border-b border-blue-100 bg-white px-4 dark:border-blue-800/30 dark:bg-blue-900/90 lg:px-6">
-        <Button variant="ghost" size="icon" className="mr-2" asChild>
-          <Link href="/dashboard/courses">
-            <ArrowLeft className="h-5 w-5" />
-            <span className="sr-only">Back to courses</span>
-          </Link>
-        </Button>
-
-        <div className="flex-1 truncate">
-          <h1 className="truncate text-lg font-semibold">
-            {course.title} {course.subtitle}
-          </h1>
+    <div className="flex h-screen w-full overflow-hidden bg-blue-50/30 dark:bg-blue-950/90">
+      {/* Sidebar - Mobile version */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-blue-100 bg-white transition-transform duration-300 ease-in-out dark:border-blue-800/30 dark:bg-blue-900/90 lg:static lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex h-14 items-center border-b border-blue-100 px-4 dark:border-blue-800/30">
+          <div className="flex items-center gap-2 font-semibold">
+            <div className="relative h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-400">
+              <Sparkles className="absolute inset-0 m-auto h-5 w-5 text-white" />
+            </div>
+            <span>LMS Tels</span>
+          </div>
+          <Button variant="ghost" size="icon" className="ml-auto lg:hidden" onClick={() => setIsSidebarOpen(false)}>
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close sidebar</span>
+          </Button>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Badge className="bg-blue-600 hover:bg-blue-700">{isEnrolled ? "Enrolled" : "Not Enrolled"}</Badge>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Share2 className="mr-2 h-4 w-4" />
-                <span>Share Course</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Download className="mr-2 h-4 w-4" />
-                <span>Download Materials</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                <span>Contact Instructor</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+        {/* Sidebar Content */}
+        <div className="flex-1 overflow-auto py-4">
+          <nav className="grid gap-1 px-2">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+            >
+              <LayoutDashboard className="h-5 w-5" />
+              <span>Dashboard</span>
+            </Link>
+            <Link
+              href="/dashboard/courses"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+            >
+              <Book className="h-5 w-5" />
+              <span>My Courses</span>
+            </Link>
+            <Link
+              href="/dashboard/assignments"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+            >
+              <FileText className="h-5 w-5" />
+              <span>Assignments</span>
+            </Link>
+            <Link
+              href="/dashboard/grades"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+            >
+              <GraduationCap className="h-5 w-5" />
+              <span>Grades</span>
+            </Link>
+            <Link
+              href="/dashboard/calendar"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+            >
+              <Calendar className="h-5 w-5" />
+              <span>Calendar</span>
+            </Link>
+          </nav>
 
-      <div className="container mx-auto p-4 lg:p-6">
-        {/* Course Banner */}
-        <div className="mb-8 overflow-hidden rounded-lg">
-          <div className={`relative h-48 bg-gradient-to-r ${course.bgColor} overflow-hidden`}>
-            {/* Free Label */}
-            {course.price === "Free" && (
-              <div className="absolute left-0 top-0 z-10 bg-yellow-500 px-3 py-1 text-xs font-bold text-white">
-                FREE
-              </div>
-            )}
-
-            {/* Course Title */}
-            <div className="absolute bottom-0 left-0 p-6 text-white">
-              <h1 className="text-3xl font-bold">{course.title}</h1>
-              {course.subtitle && <p className="text-xl">{course.subtitle}</p>}
-              <p className="mt-2 text-sm uppercase">{course.portal}</p>
-            </div>
-
-            {/* Curved Design Element */}
-            <div className="absolute bottom-0 right-0 h-full w-1/3 bg-white">
-              <div className="absolute bottom-0 right-0 h-full w-full rounded-tl-[100px] bg-gradient-to-r from-blue-900 to-blue-800"></div>
-            </div>
-
-            {/* Instructor Avatar */}
-            <div className="absolute right-8 top-1/2 -translate-y-1/2 transform">
-              <Avatar className="h-24 w-24 border-4 border-white">
-                <AvatarImage src={course.instructor.avatar} alt={course.instructor.name} />
-                <AvatarFallback className="text-lg">
-                  {course.instructor.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-
-            {/* Course Icon */}
-            <div className="absolute bottom-4 right-4">
-              <div className="h-8 w-8 rounded-full bg-white/20 p-1.5">{getCourseIcon()}</div>
-            </div>
+          <div className="mt-6 px-3">
+            <p className="px-2 text-xs font-semibold uppercase text-gray-400 dark:text-blue-300/70">Resources</p>
+            <nav className="mt-2 grid gap-1">
+              <Link
+                href="/dashboard/library"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              >
+                <Download className="h-5 w-5" />
+                <span>Library</span>
+              </Link>
+              <Link
+                href="/dashboard/settings"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-blue-100/70 hover:text-blue-600 dark:text-blue-300 dark:hover:bg-blue-800/30 dark:hover:text-blue-400"
+              >
+                <Settings className="h-5 w-5" />
+                <span>Settings</span>
+              </Link>
+            </nav>
           </div>
         </div>
 
-        {/* Course Overview */}
-        <div className="mb-8 grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className="bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
-                    >
-                      {course.category}
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="bg-green-50 text-green-700 dark:bg-green-900/50 dark:text-green-300"
-                    >
-                      {course.level}
-                    </Badge>
+        {/* Sidebar Footer */}
+        <div className="border-t border-blue-100 p-4 dark:border-blue-800/30">
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src="/placeholder-user.jpg" alt="Student" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 truncate">
+              <p className="text-sm font-medium">Jane Doe</p>
+              <p className="truncate text-xs text-gray-500 dark:text-blue-300/70">Grade 10 - Student</p>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
+        {/* Header */}
+        <header className="sticky top-0 z-30 flex h-14 items-center border-b border-blue-100 bg-white px-4 dark:border-blue-800/30 dark:bg-blue-900/90 lg:px-6">
+          <Button variant="ghost" size="icon" className="mr-2 lg:hidden" onClick={() => setIsSidebarOpen(true)}>
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+
+          <div className="flex w-full items-center gap-2 md:ml-auto md:gap-4 lg:ml-0">
+            <form className="ml-auto flex-1 md:flex-initial">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-blue-300/70" />
+                <Input
+                  type="search"
+                  placeholder="Search course content..."
+                  className="w-full rounded-lg bg-blue-50 pl-8 md:w-[240px] lg:w-[280px] dark:bg-blue-800/50"
+                />
+              </div>
+            </form>
+            <Button variant="outline" size="icon" className="rounded-full">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Notifications</span>
+              <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-blue-600"></span>
+            </Button>
+          </div>
+        </header>
+
+        {/* Course Content */}
+        <div className="container mx-auto p-4 lg:p-6">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold tracking-tight">{course.title}</h1>
+            <p className="text-gray-500 dark:text-blue-300/70">{course.description}</p>
+          </div>
+
+          {/* Tabs */}
+          <Tabs defaultValue="overview" className="mb-6" value={selectedTab} onValueChange={setSelectedTab}>
+            <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="assignments">Assignments</TabsTrigger>
+              <TabsTrigger value="grades">Grades</TabsTrigger>
+              <TabsTrigger value="resources">Resources</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Tab Content */}
+          {selectedTab === "overview" && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Course Progress</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Overall Progress</span>
+                      <span>{course.progress}%</span>
+                    </div>
+                    <Progress value={course.progress} className="h-2" />
                   </div>
-                  <CardTitle className="text-2xl">
-                    {course.title} {course.subtitle}
-                  </CardTitle>
-                  <CardDescription>{course.description}</CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="syllabus">Syllabus</TabsTrigger>
-                    <TabsTrigger value="materials">Materials</TabsTrigger>
-                    <TabsTrigger value="faq">FAQ</TabsTrigger>
-                  </TabsList>
+                </CardContent>
+              </Card>
 
-                  <TabsContent value="overview" className="mt-6">
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="mb-2 text-lg font-medium">About This Course</h3>
-                        <p className="text-gray-700 dark:text-gray-300">{course.longDescription}</p>
-                      </div>
-
-                      <div>
-                        <h3 className="mb-2 text-lg font-medium">What You'll Learn</h3>
-                        <ul className="grid gap-2 sm:grid-cols-2">
-                          {course.objectives.map((objective, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-                              <span className="text-gray-700 dark:text-gray-300">{objective}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h3 className="mb-2 text-lg font-medium">Prerequisites</h3>
-                        <ul className="space-y-1">
-                          {course.prerequisites.map((prerequisite, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <ChevronRight className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" />
-                              <span className="text-gray-700 dark:text-gray-300">{prerequisite}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="syllabus" className="mt-6">
-                    <div className="space-y-6">
-                      <h3 className="text-lg font-medium">Course Syllabus</h3>
-                      <Accordion type="single" collapsible className="w-full">
-                        {course.syllabus.map((module) => (
-                          <AccordionItem key={module.id} value={`module-${module.id}`}>
-                            <AccordionTrigger className="hover:bg-blue-50/50 px-4 py-3 dark:hover:bg-blue-900/20">
-                              <div className="flex flex-1 items-center gap-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                                  <Layers className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                </div>
-                                <div className="text-left">
-                                  <h3 className="font-medium">{module.title}</h3>
-                                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    {module.lessons.length} lessons
-                                  </p>
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="px-4 pb-3 pt-0">
-                              <div className="space-y-1 pl-11">
-                                {module.lessons.map((lesson) => {
-                                  let LessonIcon
-                                  switch (lesson.type) {
-                                    case "video":
-                                      LessonIcon = Play
-                                      break
-                                    case "lab":
-                                      LessonIcon = Terminal
-                                      break
-                                    case "quiz":
-                                    case "exam":
-                                      LessonIcon = FileText
-                                      break
-                                    default:
-                                      LessonIcon = FileText
-                                  }
-
-                                  // Check if video is available
-                                  const hasVideo = getVideoUrl(module.id, lesson.id) !== null
-                                  // Check if lesson is accessible
-                                  const isAccessible = isLessonAccessible(module.id, lesson.id)
-
-                                  return (
-                                    <div
-                                      key={lesson.id}
-                                      className={`flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors ${
-                                        isAccessible
-                                          ? "hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                                          : "opacity-60 cursor-not-allowed"
-                                      }`}
-                                      onClick={() => isAccessible && handleAccessLesson(module.id, lesson.id)}
-                                    >
-                                      <div
-                                        className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                                          hasVideo
-                                            ? isAccessible
-                                              ? "bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400"
-                                              : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500"
-                                            : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                                        }`}
-                                      >
-                                        {!isAccessible ? (
-                                          <Lock className="h-4 w-4" />
-                                        ) : (
-                                          <LessonIcon className="h-4 w-4" />
-                                        )}
-                                      </div>
-                                      <div className="flex-1">
-                                        <h4 className="text-sm font-medium">{lesson.title}</h4>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                          <Clock className="h-3 w-3" />
-                                          <span>{lesson.duration}</span>
-                                          {hasVideo && isAccessible && (
-                                            <Badge
-                                              variant="outline"
-                                              className="ml-2 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                            >
-                                              Video Available
-                                            </Badge>
-                                          )}
-                                          {!isAccessible && (
-                                            <Badge
-                                              variant="outline"
-                                              className="ml-2 bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                                            >
-                                              Locked
-                                            </Badge>
-                                          )}
-                                        </div>
-                                        {lesson.description && (
-                                          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                            {lesson.description}
-                                          </p>
-                                        )}
-                                      </div>
-                                      {isEnrolled ? (
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          className="h-8 w-8 p-0"
-                                          disabled={!isAccessible}
-                                          onClick={(e) => {
-                                            e.stopPropagation() // Prevent the parent onClick from firing
-                                            if (isEnrolled && isAccessible) {
-                                              router.push(
-                                                `/dashboard/courses/${courseId}/learn?module=${module.id}&lesson=${lesson.id}`,
-                                              )
-                                            }
-                                          }}
-                                        >
-                                          {isAccessible ? <Play className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                                        </Button>
-                                      ) : (
-                                        <Badge variant="outline" className="text-xs">
-                                          Locked
-                                        </Badge>
-                                      )}
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="materials" className="mt-6">
-                    <div className="space-y-6">
-                      <h3 className="text-lg font-medium">Course Materials</h3>
-                      <div className="space-y-3">
-                        {course.materials.map((material) => (
-                          <div
-                            key={material.id}
-                            className="flex items-center justify-between rounded-lg border p-3 transition-colors hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/50">
-                                {material.type === "pdf" ? (
-                                  <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                                ) : (
-                                  <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                                )}
-                              </div>
-                              <div>
-                                <h4 className="text-sm font-medium">{material.title}</h4>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                  {material.type.toUpperCase()} • {material.size}
-                                </p>
-                              </div>
-                            </div>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" disabled={!isEnrolled}>
-                              <Download className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                      {!isEnrolled && (
-                        <div className="mt-4 rounded-lg bg-blue-50 p-4 text-center dark:bg-blue-900/20">
-                          <p className="text-sm text-gray-700 dark:text-gray-300">
-                            Enroll in this course to access all materials
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Upcoming Assignments</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {course.upcomingAssignments.map((assignment) => (
+                      <div key={assignment.id} className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">{assignment.title}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Due {assignment.dueDate}
                           </p>
                         </div>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="faq" className="mt-6">
-                    <div className="space-y-6">
-                      <h3 className="text-lg font-medium">Frequently Asked Questions</h3>
-                      <div className="space-y-4">
-                        {course.faqs.map((faq, index) => (
-                          <div
-                            key={index}
-                            className="rounded-lg border p-4 transition-colors hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                          >
-                            <div
-                              className="flex cursor-pointer items-center justify-between"
-                              onClick={() => toggleFaq(index)}
-                            >
-                              <h4 className="font-medium">{faq.question}</h4>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                {expandedFaq === index ? (
-                                  <ChevronUp className="h-4 w-4" />
-                                ) : (
-                                  <ChevronDown className="h-4 w-4" />
-                                )}
-                              </Button>
-                            </div>
-                            {expandedFaq === index && (
-                              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{faq.answer}</p>
-                            )}
-                          </div>
-                        ))}
+                        <Badge variant="outline">{assignment.type}</Badge>
                       </div>
-                      {isEnrolled && (
-                        <div className="mt-8 space-y-4">
-                          <h3 className="text-lg font-medium">Your Course Notes</h3>
-                          <div className="rounded-lg border p-4">
-                            {notes ? (
-                              <div className="mb-4 whitespace-pre-line text-sm text-gray-700 dark:text-gray-300">
-                                {notes}
-                              </div>
-                            ) : (
-                              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                                You haven't added any notes for this course yet.
-                              </p>
-                            )}
-                            <div className="space-y-2">
-                              <textarea
-                                className="w-full resize-none rounded-lg border bg-white p-3 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800"
-                                placeholder="Add your notes here..."
-                                rows={5}
-                                value={noteInput}
-                                onChange={(e) => setNoteInput(e.target.value)}
-                              ></textarea>
-                              <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleSaveNotes}>
-                                Save Notes
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
-          <div>
-            <Card className="sticky top-20">
-              <CardHeader>
-                <CardTitle>Course Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Update the video preview in the course details page: */}
-                <div className="aspect-video overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                  {courseVideos[courseId] && courseVideos[courseId][101] ? (
-                    <div className="relative h-full w-full flex items-center justify-center bg-gray-900">
-                      <img
-                        src={`https://img.youtube.com/vi/${courseVideos[courseId][101]}/maxresdefault.jpg`}
-                        alt="Video thumbnail"
-                        className="w-full h-full object-cover opacity-80"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div
-                          className="bg-blue-600 rounded-full p-3 shadow-lg hover:bg-blue-700 transition-colors cursor-pointer"
-                          onClick={() => handleAccessLesson(1, 101)}
-                        >
-                          <Play className="h-8 w-8 text-white" fill="white" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-1 rounded text-xs text-white">
-                        Preview Available
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <BookOpen className="h-16 w-16 text-gray-400 dark:text-gray-600" />
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm font-medium">Duration</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{course.duration}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Award className="h-5 w-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm font-medium">Certification</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{course.certification}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm font-medium">Students</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{course.studentsEnrolled} enrolled</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Info className="h-5 w-5 text-gray-500" />
-                    <div>
-                      <p className="text-sm font-medium">Language</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{course.language}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {isEnrolled && (
-                  <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Course Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium text-blue-900 dark:text-blue-300">Your Progress</p>
-                      <span className="text-sm font-medium">{courseProgress}%</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Instructor</span>
+                      <span className="text-sm font-medium">{course.instructor}</span>
                     </div>
-                    <Progress value={courseProgress} className="mt-2 h-2 bg-blue-200 dark:bg-blue-900">
-                      <div className="h-full bg-blue-600" style={{ width: `${courseProgress}%` }}></div>
-                    </Progress>
-                    {lastAccessedLesson && (
-                      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                        Last accessed: Module {lastAccessedLesson.moduleId}, Lesson {lastAccessedLesson.lessonId}
-                      </p>
-                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Schedule</span>
+                      <span className="text-sm font-medium">{course.schedule}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Credits</span>
+                      <span className="text-sm font-medium">{course.credits}</span>
+                    </div>
                   </div>
-                )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-                <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-                  <p className="font-medium text-blue-900 dark:text-blue-300">Price</p>
-                  <p className="text-xl font-bold text-blue-900 dark:text-blue-300">{course.price}</p>
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Enrollment open until {new Date(course.endDate).toLocaleDateString()}
-                  </p>
-                </div>
-
-                <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={isEnrolled} onClick={handleEnroll}>
-                  {isEnrolled ? "Already Enrolled" : "Enroll Now"}
-                </Button>
-
-                {isEnrolled && (
-                  <Button className="w-full" variant="outline" asChild>
-                    <Link href={`/dashboard/courses/${course.id}/learn`}>
-                      Start Learning
-                      <ExternalLink className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                )}
+          {selectedTab === "assignments" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Assignments</CardTitle>
+                <CardDescription>View and submit your course assignments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Due Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {course.assignments.map((assignment) => (
+                      <TableRow key={assignment.id}>
+                        <TableCell className="font-medium">{assignment.title}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{assignment.type}</Badge>
+                        </TableCell>
+                        <TableCell>{assignment.dueDate}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={assignment.status === "Completed" ? "default" : "secondary"}
+                            className="rounded-full"
+                          >
+                            {assignment.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Actions</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
+                              <DropdownMenuItem className="rounded-lg cursor-pointer">
+                                <FileText className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="rounded-lg cursor-pointer">
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
-              <CardFooter className="flex flex-col gap-4 border-t bg-gray-50 px-6 py-4 dark:bg-gray-900/40">
-                <div>
-                  <p className="font-medium">Instructor</p>
-                  <div className="mt-2 flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={course.instructor.avatar} alt={course.instructor.name} />
-                      <AvatarFallback>
-                        {course.instructor.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{course.instructor.name}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{course.instructor.title}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-1">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(course.rating)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : i < course.rating
-                                ? "fill-yellow-400/50 text-yellow-400/50"
-                                : "text-gray-300 dark:text-gray-600"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="ml-1 text-sm font-medium">{course.rating}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">({course.reviewCount} reviews)</span>
-                  </div>
-                </div>
-              </CardFooter>
             </Card>
-          </div>
+          )}
+
+          {selectedTab === "grades" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Grades</CardTitle>
+                <CardDescription>View your course grades and performance</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Assignment</TableHead>
+                      <TableHead>Score</TableHead>
+                      <TableHead>Weight</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {course.grades.map((grade) => (
+                      <TableRow key={grade.id}>
+                        <TableCell className="font-medium">{grade.assignment}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={grade.score >= 70 ? "default" : "secondary"}
+                            className="rounded-full"
+                          >
+                            {grade.score}%
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{grade.weight}%</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={grade.status === "Graded" ? "default" : "secondary"}
+                            className="rounded-full"
+                          >
+                            {grade.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Actions</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2">
+                              <DropdownMenuItem className="rounded-lg cursor-pointer">
+                                <FileText className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="rounded-lg cursor-pointer">
+                                <Star className="mr-2 h-4 w-4" />
+                                Request Review
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+
+          {selectedTab === "resources" && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {course.resources.map((resource) => (
+                <Card key={resource.id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      {resource.type === "document" && <FileText className="h-5 w-5" />}
+                      {resource.type === "video" && <Video className="h-5 w-5" />}
+                      {resource.type === "link" && <Link className="h-5 w-5" />}
+                      {resource.title}
+                    </CardTitle>
+                    <CardDescription>{resource.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" className="w-full">
+                      <Download className="mr-2 h-4 w-4" />
+                      Download
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      </main>
     </div>
   )
 }

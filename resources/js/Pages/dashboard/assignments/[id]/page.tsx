@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { router } from "@inertiajs/react"
 import {
   ArrowLeft,
   CheckCircle2,
@@ -16,6 +16,28 @@ import {
   FileText,
   Calendar,
   Info,
+  Book,
+  ChevronDown,
+  Download,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+  Sparkles,
+  User,
+  X,
+  LucideBarChart,
+  TrendingUp,
+  ArrowUpRight,
+  ArrowDownRight,
+  Award,
+  Filter,
+  MoreHorizontal,
+  Star,
+  StarHalf,
+  Users,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -408,9 +430,7 @@ const CountdownTimer = ({ dueDate, timeLimit }: { dueDate: number; timeLimit?: n
 }
 
 export default function AssignmentDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const assignmentId = Number(params.id)
+  const assignmentId = router.params.id;
 
   const [assignment, setAssignment] = useState<any>(null)
   const [loading, setLoading] = useState(true)

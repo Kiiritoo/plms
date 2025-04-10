@@ -43,9 +43,9 @@ export default function LandingPage() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-2">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                <Link href="/login">Login</Link>
-              </Button>
+              <Link href="/login" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 hover:bg-blue-700 text-white h-9 px-4 py-2">
+                Login
+              </Link>
             </nav>
           </div>
         </div>

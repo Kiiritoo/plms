@@ -1,17 +1,59 @@
-"use client"
-
 import { useState } from "react"
-import Link from "next/link"
+import { Link } from "@inertiajs/react"
 import { ChevronLeft, Download, Filter, Search, Clock, Calendar, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/Components/ui/input"
+import { Tabs, TabsList, TabsTrigger } from "@/Components/ui/tabs"
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
+import { Badge } from "@/Components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table"
+import { Textarea } from "@/Components/ui/textarea"
+
+interface Assignment {
+  id: string;
+  title: string;
+  dueDate: string;
+  maxPoints: number;
+}
+
+interface Submission {
+  assignmentId: string;
+  status: 'early' | 'on-time' | 'late' | 'excused' | 'missing';
+  submittedDate: string;
+  timeBeforeDue: string;
+  score: number;
+}
+
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  course: string;
+  submissions: Submission[];
+  stats?: {
+    submissionRate: number;
+    averageScore: number;
+    earlySubmissions: number;
+    onTimeSubmissions: number;
+    lateSubmissions: number;
+    excusedSubmissions: number;
+    missingSubmissions: number;
+    submissionPattern: string;
+  };
+}
+
+interface ExtensionRequest {
+  id: string;
+  studentId: string;
+  assignmentId: string;
+  requestDate: string;
+  reason: string;
+  status: 'pending' | 'approved' | 'denied';
+  teacherNotes: string;
+}
 
 // Mock assignment data
 const assignments = [
@@ -225,23 +267,24 @@ studentSubmissions[4].submissions.find((s) => s.assignmentId === "A4").timeBefor
 
 // Add a new state for extension requests
 const StudentSubmissionsPage = () => {
-  const [showExtensionRequests, setShowExtensionRequests] = useState(false)
-  const [selectedRequest, setSelectedRequest] = useState(null)
-  const [requestNotes, setRequestNotes] = useState("")
+  const [showExtensionRequests, setShowExtensionRequests] = useState<boolean>(false)
+  const [selectedRequest, setSelectedRequest] = useState<ExtensionRequest | null>(null)
+  const [requestNotes, setRequestNotes] = useState<string>('')
 
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCourse, setSelectedCourse] = useState("all")
-  const [selectedStatus, setSelectedStatus] = useState("all")
-  const [sortBy, setSortBy] = useState("name")
-  const [sortOrder, setSortOrder] = useState("asc")
-  const [selectedAssignment, setSelectedAssignment] = useState("all")
-  const [viewMode, setViewMode] = useState("summary") // "summary" or "detailed"
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [selectedCourse, setSelectedCourse] = useState<string>('all')
+  const [selectedStatus, setSelectedStatus] = useState<string>('all')
+  const [sortBy, setSortBy] = useState<string>('name')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [selectedAssignment, setSelectedAssignment] = useState<string>('all')
+  const [viewMode, setViewMode] = useState<'summary' | 'detailed'>('summary') // "summary" or "detailed"
 
   // Add a function to handle extension request approval/denial
-  const handleExtensionRequest = (requestId, action) => {
+  const handleExtensionRequest = (requestId: string, action: 'approve' | 'deny') => {
     // In a real application, this would make an API call to update the database
-    console.log(`Extension request ${requestId} ${action}`)
-    setSelectedRequest(null)
+    console.log(`Extension request ${requestId} ${action}`, { notes: requestNotes });
+    setSelectedRequest(null);
+    setRequestNotes('');
   }
 
   // Update the calculateSubmissionStatistics function to account for excused submissions
@@ -573,7 +616,6 @@ const StudentSubmissionsPage = () => {
                     <SelectItem value="Data Structures">Data Structures</SelectItem>
                   </SelectContent>
                 </Select>
-                // Update the Select component for status filtering to include excused option
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                   <SelectTrigger className="w-[180px] h-9 rounded-lg">
                     <SelectValue placeholder="Submission pattern" />

@@ -3,13 +3,13 @@
 import { Badge } from "@/components/ui/badge"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { useNavigate, Link } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { CalendarIcon, ChevronLeft, ImagePlus, Loader2, Save } from "lucide-react"
 import { format } from "date-fns"
+import YouTube from 'react-youtube'
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,11 +17,11 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toast } from "@/components/ui/use-toast"
+import { Calendar } from "@/Components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover"
+import { Switch } from "@/Components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
+import { toast } from "@/Components/ui/use-toast"
 
 const courseFormSchema = z.object({
   title: z.string().min(3, {
@@ -58,7 +58,7 @@ const defaultValues: Partial<CourseFormValues> = {
 }
 
 export default function NewCoursePage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<CourseFormValues>({
@@ -77,7 +77,7 @@ export default function NewCoursePage() {
         title: "Course created successfully",
         description: `${data.title} has been created and is ready to use.`,
       })
-      router.push("/teacher")
+      navigate("/teacher")
     }, 1500)
   }
 
@@ -85,7 +85,7 @@ export default function NewCoursePage() {
     <div className="container py-6 space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild className="rounded-full">
-          <Link href="/teacher">
+          <Link to="/teacher">
             <ChevronLeft className="h-5 w-5" />
             <span className="sr-only">Back</span>
           </Link>
@@ -424,7 +424,7 @@ export default function NewCoursePage() {
             </TabsContent>
 
             <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline" onClick={() => router.push("/teacher")}>
+              <Button type="button" variant="outline" onClick={() => navigate("/teacher")}>
                 Cancel
               </Button>
               <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white" disabled={isSubmitting}>

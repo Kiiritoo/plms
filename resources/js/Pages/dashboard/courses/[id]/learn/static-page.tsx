@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { Link, router } from "@inertiajs/react"
 import { ArrowLeft, BookOpen, Clock, FileText, Layers } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Simplified course data
 const courseData = {
@@ -63,17 +65,9 @@ const courseData = {
 }
 
 export default function StaticCoursePage() {
-  const params = useParams()
-  const searchParams = useSearchParams()
-  const router = useRouter()
-
-  // Get course ID from URL parameters
-  const courseIdStr = params?.id || "101"
-  const courseId = Number(courseIdStr)
-
-  // Get lesson ID from query parameters
-  const lessonIdStr = searchParams?.get("lesson") || "101"
-  const lessonId = Number(lessonIdStr)
+  const courseId = router.params.id
+  const searchParams = new URLSearchParams(window.location.search)
+  const lessonId = searchParams.get('lesson')
 
   // Get course data
   const course = courseData[courseId] || {
@@ -89,7 +83,7 @@ export default function StaticCoursePage() {
   }
 
   // Find the current lesson
-  const currentLesson = course.lessons.find((l) => l.id === lessonId) || course.lessons[0]
+  const currentLesson = course.lessons.find((l) => l.id === Number(lessonId)) || course.lessons[0]
 
   // State for loading
   const [isLoading, setIsLoading] = useState(true)

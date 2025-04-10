@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { router } from "@inertiajs/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -53,7 +53,6 @@ const courses = [
 ]
 
 export default function NewAnnouncementPage() {
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [audienceType, setAudienceType] = useState("all")
 

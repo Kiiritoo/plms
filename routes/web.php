@@ -63,56 +63,75 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('dashboard/Page');
-})->middleware(['auth'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Dashboard routes - require authentication
-Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+// Dashboard routes - publicly accessible
+Route::prefix('dashboard')->group(function () {
+    // Main dashboard
     Route::get('/', function () {
         return Inertia::render('dashboard/page');
     })->name('dashboard');
 
+    // Courses
     Route::get('/courses', function () {
         return Inertia::render('dashboard/courses/page');
     })->name('dashboard.courses');
 
+    Route::get('/courses/{id}', function ($id) {
+        return Inertia::render('dashboard/courses/[id]/page', [
+            'courseId' => $id
+        ]);
+    })->name('dashboard.courses.show');
+
+    Route::get('/courses/{id}/learn', function ($id) {
+        return Inertia::render('dashboard/courses/[id]/learn/page', [
+            'courseId' => $id
+        ]);
+    })->name('dashboard.courses.learn');
+
+    // Assignments
     Route::get('/assignments', function () {
         return Inertia::render('dashboard/assignments/page');
     })->name('dashboard.assignments');
 
+    Route::get('/assignments/{id}', function ($id) {
+        return Inertia::render('dashboard/assignments/[id]/page', [
+            'assignmentId' => $id
+        ]);
+    })->name('dashboard.assignments.show');
+
+    // Grades
     Route::get('/grades', function () {
         return Inertia::render('dashboard/grades/page');
     })->name('dashboard.grades');
 
-    Route::get('/library', function () {
-        return Inertia::render('dashboard/library/page');
-    })->name('dashboard.library');
-
-    Route::get('/settings', function () {
-        return Inertia::render('dashboard/settings/page');
-    })->name('dashboard.settings');
-
+    // Calendar
     Route::get('/calendar', function () {
         return Inertia::render('dashboard/calendar/page');
     })->name('dashboard.calendar');
 
-    // Course detail route with dynamic ID
-    Route::get('/courses/{id}/learn', function ($id) {
-        return Inertia::render('dashboard/courses/[id]/learn/static-page', [
-            'courseId' => $id
-        ]);
-    })->name('dashboard.courses.learn');
+    // Library
+    Route::get('/library', function () {
+        return Inertia::render('dashboard/library/page');
+    })->name('dashboard.library');
+
+    // Settings
+    Route::get('/settings', function () {
+        return Inertia::render('dashboard/settings/page');
+    })->name('dashboard.settings');
+
+    // Notifications
+    Route::get('/notifications', function () {
+        return Inertia::render('dashboard/notifications/page');
+    })->name('dashboard.notifications');
 });
 
-// Teacher routes - require teacher role
-Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function () {
+// Teacher routes - no authentication required
+Route::prefix('teacher')->group(function () {
     Route::get('/', function () {
         return Inertia::render('teacher/page');
     })->name('teacher.dashboard');
@@ -150,8 +169,8 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     })->name('teacher.announcements');
 });
 
-// Admin routes - require admin role
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+// Admin routes - no authentication required
+Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return Inertia::render('admin/page');
     })->name('admin.dashboard');

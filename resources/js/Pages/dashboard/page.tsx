@@ -25,11 +25,11 @@ import {
   AlertCircle
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/Components/ui/button"
+import { Card, CardContent, CardFooter } from "@/Components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
+import { Badge } from "@/Components/ui/badge"
+import { Input } from "@/Components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +37,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/Components/ui/dropdown-menu"
 
 // Sample data for upcoming assignments
 const upcomingAssignments = [
@@ -657,5 +657,7 @@ export default function Dashboard() {
       </main>
     </div>
   )
+
+  return content
 }
 

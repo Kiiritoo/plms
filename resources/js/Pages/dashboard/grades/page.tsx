@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import { Link, router } from "@inertiajs/react"
 import {
   Bell,
   Book,
@@ -24,6 +24,11 @@ import {
   ArrowDownRight,
   HelpCircle,
   Award,
+  Filter,
+  MoreHorizontal,
+  Star,
+  StarHalf,
+  Users,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"

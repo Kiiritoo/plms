@@ -3,8 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { Link, router } from "@inertiajs/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -62,7 +61,6 @@ const defaultValues: Partial<AssignmentFormValues> = {
 }
 
 export default function CreateAssignmentPage() {
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [activeTab, setActiveTab] = useState("details")
   const [files, setFiles] = useState<File[]>([])

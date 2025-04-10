@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { router } from "@inertiajs/react"
+import { Link } from "@inertiajs/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -49,7 +49,6 @@ const courses = [
 ]
 
 export default function UploadMaterialsPage() {
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
 
@@ -78,7 +77,7 @@ export default function UploadMaterialsPage() {
         title: "Materials uploaded successfully",
         description: `${uploadedFiles.length} file(s) have been uploaded to the course.`,
       })
-      router.push("/teacher")
+      router.visit("/teacher")
     }, 1500)
   }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import { Link, router } from "@inertiajs/react"
 import {
   Bell,
   Book,

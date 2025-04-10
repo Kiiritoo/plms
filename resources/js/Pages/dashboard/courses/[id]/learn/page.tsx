@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
-import Link from "next/link"
+import { Link, router } from "@inertiajs/react"
 import {
   ArrowLeft,
   ArrowRight,
@@ -362,14 +361,12 @@ interface YouTubeEvent {
 }
 
 export default function CourseLearnPage() {
-  const params = useParams()
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const courseId = Number(params.id)
+  const courseId = router.params.id;
+  const searchParams = new URLSearchParams(window.location.search);
+  const lessonId = searchParams.get('lesson');
 
   // Get module and lesson IDs from URL query parameters
   const moduleId = Number(searchParams.get("module") || "1")
-  const lessonId = Number(searchParams.get("lesson") || "101")
 
   // Find the course by ID
   const course = courseData.find((c) => c.id === courseId) as Course | undefined

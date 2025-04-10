@@ -9,11 +9,10 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { router } from "@inertiajs/react"
+import { Link } from "@inertiajs/react"
 
 export default function NewUserPage() {
-  const router = useRouter()
   const [userRole, setUserRole] = useState("student")
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formData, setFormData] = useState({
@@ -30,7 +29,7 @@ export default function NewUserPage() {
     bio: "",
   })
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData({
       ...formData,
@@ -38,7 +37,7 @@ export default function NewUserPage() {
     })
   }
 
-  const handleRoleChange = (value) => {
+  const handleRoleChange = (value: string) => {
     setUserRole(value)
     setFormData({
       ...formData,
@@ -46,13 +45,13 @@ export default function NewUserPage() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setFormSubmitted(true)
 
     // Simulate API call
     setTimeout(() => {
-      router.push("/admin/users")
+      router.visit("/admin/users")
     }, 1500)
   }
 
@@ -268,7 +267,7 @@ export default function NewUserPage() {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button variant="outline" type="button" onClick={() => router.push("/admin/users")}>
+              <Button variant="outline" type="button" onClick={() => router.visit("/admin/users")}>
                 Cancel
               </Button>
               <Button type="submit" className="bg-blue-600 hover:bg-blue-700" disabled={formSubmitted}>
