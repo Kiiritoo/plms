@@ -140,6 +140,30 @@ Route::prefix('teacher')->group(function () {
         return Inertia::render('teacher/courses/page');
     })->name('teacher.courses');
 
+    Route::get('/courses/new', function () {
+        return Inertia::render('teacher/courses/new/page');
+    })->name('teacher.courses.new');
+
+    Route::post('/courses', function (Request $request) {
+        // Validate the request
+        $validated = $request->validate([
+            'title' => 'required|string|min:1',
+            'description' => 'required|string|min:1',
+            'category' => 'required|string|min:1',
+            'level' => 'required|string|min:1',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date|after:startDate',
+            'enrollmentLimit' => 'nullable|string',
+            'isPublic' => 'nullable|boolean',
+            'allowSelfEnrollment' => 'nullable|boolean',
+            'tags' => 'nullable|string',
+        ]);
+
+        // TODO: Create the course in the database
+        // For now, just return a success response
+        return response()->json(['message' => 'Course created successfully']);
+    })->name('teacher.courses.store');
+
     Route::get('/students', function () {
         return Inertia::render('teacher/students/page');
     })->name('teacher.students');
@@ -182,6 +206,30 @@ Route::prefix('admin')->group(function () {
     Route::get('/courses', function () {
         return Inertia::render('admin/courses/page');
     })->name('admin.courses');
+
+    Route::get('/courses/new', function () {
+        return Inertia::render('admin/courses/new/page');
+    })->name('admin.courses.new');
+
+    Route::post('/courses', function (Request $request) {
+        // Validate the request
+        $validated = $request->validate([
+            'title' => 'required|string|min:1',
+            'description' => 'required|string|min:1',
+            'category' => 'required|string|min:1',
+            'level' => 'required|string|min:1',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date|after:startDate',
+            'enrollmentLimit' => 'nullable|string',
+            'isPublic' => 'nullable|boolean',
+            'allowSelfEnrollment' => 'nullable|boolean',
+            'tags' => 'nullable|string',
+        ]);
+
+        // TODO: Create the course in the database
+        // For now, just return a success response
+        return response()->json(['message' => 'Course created successfully']);
+    })->name('admin.courses.store');
 
     Route::get('/settings', function () {
         return Inertia::render('admin/settings/page');

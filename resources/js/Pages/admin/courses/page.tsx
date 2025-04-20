@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { router } from "@inertiajs/react"
 import {
   BookOpen,
   Search,
@@ -221,7 +222,10 @@ export default function CoursesPage() {
             <p className="text-slate-500 dark:text-slate-400">Manage all courses and their content</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md shadow-red-200 dark:shadow-red-900/20">
+            <Button 
+              className="bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md shadow-red-200 dark:shadow-red-900/20"
+              onClick={() => router.visit('/admin/courses/new')}
+            >
               <Plus className="mr-2 h-4 w-4" />
               Add Course
             </Button>

@@ -727,77 +727,77 @@ export default function NewCoursePage() {
     <TeacherLayout>
       <div className="container max-w-5xl py-8 space-y-8">
         <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" asChild className="rounded-full">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" asChild className="rounded-full">
               <Link href="/teacher/courses">
-            <ChevronLeft className="h-5 w-5" />
-            <span className="sr-only">Back</span>
-          </Link>
-        </Button>
+                <ChevronLeft className="h-5 w-5" />
+                <span className="sr-only">Back</span>
+              </Link>
+            </Button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Create New Course</h1>
               <p className="text-sm text-muted-foreground">
-        Fill in the details below to create a new course for your students.
-      </p>
+                Fill in the details below to create a new course for your students.
+              </p>
             </div>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
-          <TabsTrigger value="details">Course Details</TabsTrigger>
+            <TabsTrigger value="details">Course Details</TabsTrigger>
             <TabsTrigger value="chapters">Chapters & Content</TabsTrigger>
-        </TabsList>
+          </TabsList>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <TabsContent value="details" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Basic Information</CardTitle>
-                  <CardDescription>Enter the basic details about your course.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-2/3 space-y-6">
-                      <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Course Title</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Introduction to Computer Science" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              This is the name of your course as it will appear to students.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Basic Information</CardTitle>
+                    <CardDescription>Enter the basic details about your course.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="w-full md:w-2/3 space-y-6">
+                        <FormField
+                          control={form.control}
+                          name="title"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Course Title</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Introduction to Computer Science" {...field} />
+                              </FormControl>
+                              <FormDescription>
+                                This is the name of your course as it will appear to students.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Course Description</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                placeholder="Provide a detailed description of your course..."
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Course Description</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  placeholder="Provide a detailed description of your course..."
                                   className="min-h-32 resize-none"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormDescription>Describe what students will learn in this course.</FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormDescription>Describe what students will learn in this course.</FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-                    <div className="w-full md:w-1/3 space-y-6">
+                      <div className="w-full md:w-1/3 space-y-6">
                         <div className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-6 flex flex-col items-center justify-center text-center h-48 relative">
                           {thumbnailPreview ? (
                             <>
@@ -814,8 +814,8 @@ export default function NewCoursePage() {
                                   onClick={removeThumbnail}
                                 >
                                   <X className="h-4 w-4" />
-                        </Button>
-                      </div>
+                                </Button>
+                              </div>
                             </>
                           ) : (
                             <>
@@ -840,98 +840,98 @@ export default function NewCoursePage() {
                             </>
                           )}
                         </div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Category</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a category" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="computer-science">Computer Science</SelectItem>
-                              <SelectItem value="mathematics">Mathematics</SelectItem>
-                              <SelectItem value="science">Science</SelectItem>
-                              <SelectItem value="humanities">Humanities</SelectItem>
-                              <SelectItem value="business">Business</SelectItem>
-                              <SelectItem value="arts">Arts</SelectItem>
-                              <SelectItem value="language">Language</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormDescription>Select the main category for your course.</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="startDate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Start Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Category</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
-                                >
-                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
                               </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                            </PopoverContent>
-                          </Popover>
-                          <FormDescription>When will the course be available to students?</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                              <SelectContent>
+                                <SelectItem value="computer-science">Computer Science</SelectItem>
+                                <SelectItem value="mathematics">Mathematics</SelectItem>
+                                <SelectItem value="science">Science</SelectItem>
+                                <SelectItem value="humanities">Humanities</SelectItem>
+                                <SelectItem value="business">Business</SelectItem>
+                                <SelectItem value="arts">Arts</SelectItem>
+                                <SelectItem value="language">Language</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>Select the main category for your course.</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <FormField
-                      control={form.control}
-                      name="endDate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>End Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
-                                >
-                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                            </PopoverContent>
-                          </Popover>
-                          <FormDescription>When will the course end?</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="startDate"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Start Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                                  >
+                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                              </PopoverContent>
+                            </Popover>
+                            <FormDescription>When will the course be available to students?</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="endDate"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>End Date</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                                  >
+                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                              </PopoverContent>
+                            </Popover>
+                            <FormDescription>When will the course end?</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
                   <CardFooter className="flex justify-between border-t pt-6">
                     <Button variant="outline" onClick={() => router.visit("/teacher/courses")}>
                       Cancel
@@ -940,11 +940,11 @@ export default function NewCoursePage() {
                       Next: Add Chapters
                     </Button>
                   </CardFooter>
-              </Card>
-            </TabsContent>
+                </Card>
+              </TabsContent>
 
               <TabsContent value="chapters" className="space-y-6">
-              <Card>
+                <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <div>
                       <CardTitle>Chapters & Content</CardTitle>
@@ -961,8 +961,8 @@ export default function NewCoursePage() {
                       <Plus className="mr-2 h-4 w-4" />
                       Add Chapter
                     </Button>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                  </CardHeader>
+                  <CardContent className="space-y-6">
                     {chapters.length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="rounded-full bg-primary/10 p-3">
@@ -1245,13 +1245,13 @@ export default function NewCoursePage() {
             </DialogHeader>
             <Form {...chapterForm}>
               <form onSubmit={chapterForm.handleSubmit(handleChapterSubmit)} className="space-y-4 py-2">
-                  <FormField
+                <FormField
                   control={chapterForm.control}
                   name="title"
-                    render={({ field }) => (
-                      <FormItem>
+                  render={({ field }) => (
+                    <FormItem>
                       <FormLabel className="text-base">Chapter Title</FormLabel>
-                        <FormControl>
+                      <FormControl>
                         <Input placeholder="e.g., Introduction to the Course" {...field} className="w-full" />
                       </FormControl>
                       <FormMessage />
@@ -1270,14 +1270,14 @@ export default function NewCoursePage() {
                           className="resize-none min-h-[100px]"
                           {...field}
                         />
-                        </FormControl>
-                        <FormDescription>
+                      </FormControl>
+                      <FormDescription>
                         A short description to help students understand what this chapter covers.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <DialogFooter className="pt-4 flex flex-col sm:flex-row gap-2 sm:gap-0">
                   <Button
                     type="button"
@@ -1322,10 +1322,10 @@ export default function NewCoursePage() {
             </DialogHeader>
             <Form {...lessonForm}>
               <form onSubmit={lessonForm.handleSubmit(handleLessonSubmit)} className="space-y-4 py-2">
-                    <FormField
+                <FormField
                   control={lessonForm.control}
                   name="title"
-                      render={({ field }) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base">Lesson Title</FormLabel>
                       <FormControl>
@@ -1417,7 +1417,7 @@ export default function NewCoursePage() {
                       </FormItem>
                     )}
                   />
-                          </div>
+                </div>
 
                 {/* Video Content Section */}
                 {lessonForm.watch("type") === "video" && (
@@ -1518,10 +1518,10 @@ export default function NewCoursePage() {
                           )}
                       </div>
                     ) : (
-                    <FormField
+                      <FormField
                         control={lessonForm.control}
                         name="videoUrl"
-                      render={({ field }) => (
+                        render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-base">YouTube URL</FormLabel>
                             <FormControl>
@@ -1533,7 +1533,7 @@ export default function NewCoursePage() {
                         )}
                       />
                     )}
-                          </div>
+                  </div>
                 )}
 
                 {/* Reading Content Section */}
@@ -1620,7 +1620,7 @@ export default function NewCoursePage() {
                                           )
                                         : getFileExtension(uploadedReadings[`${currentChapter.id}-new`]?.name)}
                                     </Badge>
-                  </div>
+                                  </div>
                                   <Button
                                     variant="ghost"
                                     size="icon"
@@ -1704,7 +1704,7 @@ export default function NewCoursePage() {
                       />
                     </div>
 
-              <Card>
+                    <Card>
                       <CardHeader className="flex flex-row items-center justify-between py-4">
                         <div>
                           <CardTitle className="text-base">Questions</CardTitle>
@@ -1735,8 +1735,8 @@ export default function NewCoursePage() {
                           <Plus className="mr-1 h-3 w-3" />
                           Add Question
                         </Button>
-                </CardHeader>
-                <CardContent>
+                      </CardHeader>
+                      <CardContent>
                         {quizQuestions.length === 0 ? (
                           <div className="text-center py-8 border-2 border-dashed rounded-lg">
                             <p className="text-muted-foreground mb-2">No questions added yet</p>
@@ -1765,7 +1765,7 @@ export default function NewCoursePage() {
                               <Plus className="mr-2 h-4 w-4" />
                               Add Question
                             </Button>
-                    </div>
+                          </div>
                         ) : (
                           quizQuestions.map((question, index) => (
                             <div
@@ -1774,12 +1774,12 @@ export default function NewCoursePage() {
                             >
                               <div className="flex justify-between items-start mb-2">
                                 <div className="flex items-center gap-2">
-                          <Badge
-                            variant="outline"
+                                  <Badge
+                                    variant="outline"
                                     className="h-6 w-6 rounded-full p-0 flex items-center justify-center"
-                          >
+                                  >
                                     {index + 1}
-                          </Badge>
+                                  </Badge>
                                   <h4 className="font-medium">{question.question}</h4>
                                 </div>
                                 <div className="flex items-center gap-1">
@@ -1804,8 +1804,8 @@ export default function NewCoursePage() {
                                   >
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
-                      </div>
-                          </div>
+                                </div>
+                              </div>
 
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                                 {question.options?.map((option, optIndex) => (
@@ -1820,19 +1820,19 @@ export default function NewCoursePage() {
                                     <div className="flex items-center gap-2">
                                       <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border">
                                         {optIndex + 1}
-                          </div>
+                                      </div>
                                       <span className="truncate">{option.text}</span>
                                     </div>
                                     {option.isCorrect && (
                                       <Check className="h-4 w-4 ml-auto text-green-600 dark:text-green-400" />
-                        )}
-                      </div>
+                                    )}
+                                  </div>
                                 ))}
-                    </div>
-                  </div>
+                              </div>
+                            </div>
                           ))
                         )}
-                </CardContent>
+                      </CardContent>
                       {quizQuestions.length > 0 && (
                         <CardFooter className="border-t px-6 py-4">
                           <Button
@@ -1863,7 +1863,7 @@ export default function NewCoursePage() {
                           </Button>
                         </CardFooter>
                       )}
-              </Card>
+                    </Card>
                   </div>
                 )}
 
@@ -1879,14 +1879,14 @@ export default function NewCoursePage() {
                     }}
                     className="w-full sm:w-auto order-2 sm:order-1"
                   >
-                Cancel
-              </Button>
+                    Cancel
+                  </Button>
                   <Button type="submit" className="w-full sm:w-auto order-1 sm:order-2">
                     {isEditingLesson ? "Save Changes" : "Add Lesson"}
-              </Button>
+                  </Button>
                 </DialogFooter>
-          </form>
-        </Form>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
 
@@ -1927,7 +1927,7 @@ export default function NewCoursePage() {
                     })
                   }}
                 />
-    </div>
+              </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
